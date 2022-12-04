@@ -44,10 +44,6 @@ sudo docker-compose stop
 ```bash
 sudo docker-compose restart {container_name}
 ```
-- Запуск ipython
-```bash
-sudo docker-compose exec backend ipython
-```
 
 # Команда
 
