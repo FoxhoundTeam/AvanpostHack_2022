@@ -24,6 +24,31 @@ sudo docker compose up -d
 ```
 5. Настроить внешний nginx, который будет пересылать все запросы на порт приложения
 
+# Описание переменных окружения
+
+## HTTP_PORT
+Файлы: .env
+
+Тип: целое число
+
+Назначение: порт на котором будет крутиться приложение
+
+
+# Команды docker-compose 
+Все команды необходимо выполнять в папке compose
+- Остановить все контейнеры
+```bash
+sudo docker-compose stop
+```
+- Перезапустить контейнер
+```bash
+sudo docker-compose restart {container_name}
+```
+- Запуск ipython
+```bash
+sudo docker-compose exec backend ipython
+```
+
 # Команда
 
 Антон Недогарок - алгоритмы, R&D, ML, Python
