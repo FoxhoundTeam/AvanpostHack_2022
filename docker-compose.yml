@@ -5,12 +5,8 @@ services:
     build: 
       dockerfile: ./compose/backend/Dockerfile
       context: .
-    env_file:
-      - .env
     volumes:
       - ./model:/app/model
-    depends_on:
-      - db
 
   frontend:
     build: 
