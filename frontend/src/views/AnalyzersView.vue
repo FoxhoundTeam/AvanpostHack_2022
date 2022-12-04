@@ -34,7 +34,7 @@
           ><v-card-text
             ><p>Схожесть: {{ result.similarity }}</p>
             <p>
-              Время выполнения на сервере: {{ result.executionTime }}
+              Время выполнения на сервере: {{ result.executionTime }} сек.
             </p></v-card-text
           ></v-card
         >
@@ -111,8 +111,6 @@ export default {
       if (response.status == 200) {
         this.result = response.data;
       }
-      this.firstImage = null;
-      this.secondImage = null;
       this.loading = false;
     },
   },
