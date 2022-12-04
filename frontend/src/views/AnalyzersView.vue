@@ -62,7 +62,7 @@ export default {
           value: "/api/recognize/",
         },
       ],
-      activeAnalyzer: "/api/sift/",
+      activeAnalyzer: "/api/tf/",
       firstImage: null,
       secondImage: null,
       verbose: false,
@@ -80,14 +80,15 @@ export default {
   },
   methods: {
     async startAction() {
+      if (!this.firstImage) return;
       this.loading = true;
       this.result = null;
       const data = {
-        firstImage: this.firstImage.toString("base64"),
+        firstImage: btoa(this.firstImage),
         verbose: this.verbose,
       };
       if (this.secondImage) {
-        data.secondImage = this.secondImage.toString("base64");
+        data.secondImage = btoa(this.secondImage);
       }
       const response = await http.createItem(this.activeAnalyzer, {
         data,
