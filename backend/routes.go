@@ -34,8 +34,12 @@ func tensorflowAnalyze(c *fiber.Ctx) error {
 	if err := c.BodyParser(request); err != nil {
 		return err
 	}
+	result, err := AnalyzeWithTensorflow(request.FirstImage, request.SecondImage)
+	if err != nil {
+		return err
+	}
 	response := AnalyzeResponse{
-		Similarity:    AnalyzeWithTensorflow(request.FirstImage, request.SecondImage),
+		Similarity:    result,
 		ExecutionTime: time.Since(start).Seconds(),
 	}
 	return c.JSON(response)

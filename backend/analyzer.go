@@ -9,9 +9,15 @@ import (
 	cv "gocv.io/x/gocv"
 )
 
-func prepareImage(bs64Image string) [][][][]float32 {
-	imageBytes, _ := base64.StdEncoding.DecodeString(bs64Image)
-	cvImage, _ := cv.IMDecode(imageBytes, cv.IMReadColor)
+func prepareImage(bs64Image string) ([][][][]float32, error) {
+	imageBytes, err := base64.StdEncoding.DecodeString(bs64Image)
+	if err != nil {
+		return nil, err
+	}
+	cvImage, decodeError := cv.IMDecode(imageBytes, cv.IMReadColor)
+	if decodeError != nil {
+		return nil, decodeError
+	}
 	cv.CvtColor(cvImage, &cvImage, cv.ColorBGRToGray)
 	cv.Resize(cvImage, &cvImage, image.Point{X: 160, Y: 160}, 0, 0, cv.InterpolationLinear)
 	cvImage.DivideFloat(255)
@@ -23,13 +29,21 @@ func prepareImage(bs64Image string) [][][][]float32 {
 			result[0][i][j] = []float32{cvImage.GetFloatAt(i, j)}
 		}
 	}
-	return result
+	return result, nil
 }
 
-func AnalyzeWithTensorflow(firstBs64Image string, secondBs64Image string) float32 {
+func AnalyzeWithTensorflow(firstBs64Image string, secondBs64Image string) (float32, error) {
 	model := tg.LoadModel("model", []string{"serve"}, nil)
-	firstInput, _ := tf.NewTensor(prepareImage(firstBs64Image))
-	secondInput, _ := tf.NewTensor(prepareImage(secondBs64Image))
+	firstInputImage, err := prepareImage(firstBs64Image)
+	if err != nil {
+		return 0, err
+	}
+	secondInputImage, err := prepareImage(secondBs64Image)
+	if err != nil {
+		return 0, err
+	}
+	firstInput, _ := tf.NewTensor(firstInputImage)
+	secondInput, _ := tf.NewTensor(secondInputImage)
 	results := model.Exec([]tf.Output{
 		model.Op("StatefulPartitionedCall", 0),
 	}, map[tf.Output]*tf.Tensor{
@@ -37,5 +51,5 @@ func AnalyzeWithTensorflow(firstBs64Image string, secondBs64Image string) float3
 		model.Op("serving_default_inputs_input_2", 0): secondInput,
 	})
 	predictions := results[0]
-	return predictions.Value().(float32)
+	return predictions.Value().(float32), nil
 }
