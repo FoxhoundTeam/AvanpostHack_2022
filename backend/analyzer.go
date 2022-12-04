@@ -47,8 +47,8 @@ func AnalyzeWithTensorflow(firstBs64Image string, secondBs64Image string) (float
 	results := model.Exec([]tf.Output{
 		model.Op("StatefulPartitionedCall", 0),
 	}, map[tf.Output]*tf.Tensor{
-		model.Op("serving_default_inputs_input_1", 0): firstInput,
-		model.Op("serving_default_inputs_input_2", 0): secondInput,
+		model.Op("serving_default_input_1", 0): firstInput,
+		model.Op("serving_default_input_2", 0): secondInput,
 	})
 	predictions := results[0]
 	return predictions.Value().(float32), nil
