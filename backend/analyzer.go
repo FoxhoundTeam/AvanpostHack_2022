@@ -51,5 +51,5 @@ func AnalyzeWithTensorflow(firstBs64Image string, secondBs64Image string) (float
 		model.Op("serving_default_input_2", 0): secondInput,
 	})
 	predictions := results[0]
-	return predictions.Value().(float32), nil
+	return predictions.Value().([][]float32)[0][0], nil
 }
