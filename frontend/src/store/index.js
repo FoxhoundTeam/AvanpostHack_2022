@@ -1,5 +1,4 @@
 import Vuex from "vuex";
-import http from "../http";
 import Vue from "vue";
 
 Vue.use(Vuex);
