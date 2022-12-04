@@ -9,11 +9,11 @@ RUN ldconfig
 
 ENV GOPATH /go
 
-COPY go.mod ./
-COPY go.sum ./
+COPY ./backend/go.mod ./
+COPY ./backend/go.sum ./
 RUN go mod download
 
-COPY *.go ./
+COPY ./backend/*.go ./
 
 RUN go build -v -o /analyzer
 
