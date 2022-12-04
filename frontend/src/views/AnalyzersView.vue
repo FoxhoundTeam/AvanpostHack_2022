@@ -11,14 +11,22 @@
           <v-file-input label="Файл отпечатка пальца" v-model="firstImage" />
         </v-form>
         <v-form v-else>
-          <v-file-input
-            label="Первый файл отпечатка пальца"
-            v-model="firstImage"
-          />
-          <v-file-input
-            label="Второй файл отпечатка пальца"
-            v-model="secondImage"
-          />
+          <v-row
+            ><v-col>
+              <v-file-input
+                label="Первый файл отпечатка пальца"
+                v-model="firstImage" /></v-col
+            ><v-col v-if="firstImage"
+              ><v-img width="200" :src="firstImageURL" /></v-col
+          ></v-row>
+          <v-row
+            ><v-col
+              ><v-file-input
+                label="Второй файл отпечатка пальца"
+                v-model="secondImage" /></v-col
+            ><v-col v-if="secondImage"
+              ><v-img width="200" :src="secondImageURL" /></v-col
+          ></v-row>
           <v-checkbox
             label="Вернуть дополнительную информацию"
             v-model="verbose"
@@ -76,6 +84,16 @@ export default {
       this.firstImage = null;
       this.secondImage = null;
       this.verbose = false;
+    },
+  },
+  computed: {
+    firstImageURL() {
+      if (this.firstImage) return URL.createObjectURL(this.firstImage);
+      else return null;
+    },
+    secondImageURL() {
+      if (this.firstImage) return URL.createObjectURL(this.secondImage);
+      else return null;
     },
   },
   methods: {
