@@ -15,7 +15,39 @@
 
 `research` - предварительная обработка данных, прототипирование алгоритмов на Python.
 
+# Развертывание через docker-compose
+1. Установить [docker](https://docs.docker.com/engine/install/ubuntu/)
+2. В папке compose создать файл .env и [заполнить](#описание-переменных-окружения) его в соответствии с примерами
+3. Запустить команду docker compose up -d с правами суперпользователя
+```bash
+sudo docker compose up -d
+```
+5. Настроить внешний nginx, который будет пересылать все запросы на порт приложения
 
+# Описание переменных окружения
+
+## HTTP_PORT
+Файлы: .env
+
+Тип: целое число
+
+Назначение: порт на котором будет крутиться приложение
+
+
+# Команды docker-compose 
+Все команды необходимо выполнять в папке compose
+- Остановить все контейнеры
+```bash
+sudo docker-compose stop
+```
+- Перезапустить контейнер
+```bash
+sudo docker-compose restart {container_name}
+```
+- Запуск ipython
+```bash
+sudo docker-compose exec backend ipython
+```
 
 # Команда
 
