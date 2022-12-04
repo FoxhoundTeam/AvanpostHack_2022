@@ -79,16 +79,24 @@ export default {
     },
   },
   methods: {
+    async getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
+    },
     async startAction() {
       if (!this.firstImage) return;
       this.loading = true;
       this.result = null;
       const data = {
-        firstImage: window.btoa(this.firstImage),
+        firstImage: await this.getBase64(this.firstImage),
         verbose: this.verbose,
       };
       if (this.secondImage) {
-        data.secondImage = window.btoa(this.secondImage);
+        data.secondImage = await this.getBase64(this.secondImage);
       }
       const response = await http.createItem(this.activeAnalyzer, {
         data,
