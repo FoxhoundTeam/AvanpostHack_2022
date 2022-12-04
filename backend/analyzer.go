@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/base64"
-	"fmt"
 	"image"
 
 	tf "github.com/galeone/tensorflow/tensorflow/go"
@@ -19,15 +18,17 @@ func prepareImage(bs64Image string) ([][][][]float32, error) {
 	if decodeError != nil {
 		return nil, decodeError
 	}
-	cv.CvtColor(cvImage, &cvImage, cv.ColorBGRToGray)
-	cv.Resize(cvImage, &cvImage, image.Point{X: 160, Y: 160}, 0, 0, cv.InterpolationLinear)
-	cvImage.DivideFloat(255)
+	resizeImage := cv.NewMat()
+	cv.Resize(cvImage, &resizeImage, image.Point{X: 160, Y: 160}, 0, 0, cv.InterpolationLinear)
+	img := resizeImage.Clone()
+	cv.CvtColor(resizeImage, &img, cv.ColorBGRToGray)
 	result := make([][][][]float32, 1)
 	result[0] = make([][][]float32, 160)
 	for i := 0; i < 160; i++ {
 		result[0][i] = make([][]float32, 160)
 		for j := 0; j < 160; j++ {
-			result[0][i][j] = []float32{cvImage.GetFloatAt(i, j)}
+			pixel := float32(img.GetUCharAt(i, j)) / 255
+			result[0][i][j] = []float32{pixel}
 		}
 	}
 	return result, nil
@@ -52,6 +53,5 @@ func AnalyzeWithTensorflow(firstBs64Image string, secondBs64Image string) (float
 		model.Op("serving_default_input_2", 0): secondInput,
 	})
 	predictions := results[0]
-	fmt.Println(predictions.Value())
 	return predictions.Value().([][]float32)[0][0], nil
 }

@@ -111,6 +111,8 @@ export default {
       if (response.status == 200) {
         this.result = response.data;
       }
+      this.firstImage = null;
+      this.secondImage = null;
       this.loading = false;
     },
   },
