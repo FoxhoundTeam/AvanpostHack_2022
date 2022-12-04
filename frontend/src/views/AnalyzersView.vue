@@ -84,11 +84,11 @@ export default {
       this.loading = true;
       this.result = null;
       const data = {
-        firstImage: Buffer.from(this.firstImage).toString("base64"),
+        firstImage: window.btoa(this.firstImage),
         verbose: this.verbose,
       };
       if (this.secondImage) {
-        data.secondImage = Buffer.from(this.secondImage).toString("base64");
+        data.secondImage = window.btoa(this.secondImage);
       }
       const response = await http.createItem(this.activeAnalyzer, {
         data,
